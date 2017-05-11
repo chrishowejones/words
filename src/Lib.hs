@@ -1,13 +1,37 @@
 module Lib
-    ( someFunc
-    , someString
+    ( grid
+    , languages
+    , formatGrid
+    , outputGrid
+    , findWord
+    , findWordInLine
+    , findWords
     ) where
+import Data.List (isInfixOf)
+import Data.Maybe (catMaybes)
 
-someFunc :: IO ()
-someFunc = putStrLn someString
+type Grid = [String]
 
-someString :: String
-someString = "someString"
+outputGrid :: Grid -> IO ()
+outputGrid grid = putStrLn (formatGrid grid)
+
+formatGrid :: Grid -> String
+formatGrid = unlines
+
+findWord :: Grid -> String -> Maybe String
+findWord grid word =
+  let lines = grid ++ (map reverse grid)
+      found = or $ map (findWordInLine word) lines
+  in if found then Just word else Nothing
+
+findWords :: Grid -> [String] -> [String]
+findWords grid words =
+  let foundWords = map (findWord grid) words
+  in catMaybes foundWords
+
+
+findWordInLine :: String -> String -> Bool
+findWordInLine = isInfixOf
 
 grid = ["__C________R___"
        ,"__SI________U__"
@@ -23,14 +47,14 @@ grid = ["__C________R___"
        ,"________CN_____"
        ]
 
-languages ["BASIC"
-          ,"COBOL"
-          ,"CSHARP"
-          ,"HASKELL"
-          ,"LISP"
-          ,"PERL"
-          ,"PHP"
-          ,"PYTHON"
-          ,"RUBY"
-          ,"SCHEME"
-          ]
+languages = ["BASIC"
+            ,"COBOL"
+            ,"CSHARP"
+            ,"HASKELL"
+            ,"LISP"
+            ,"PERL"
+            ,"PHP"
+            ,"PYTHON"
+            ,"RUBY"
+            ,"SCHEME"
+            ]
